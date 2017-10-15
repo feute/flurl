@@ -22,6 +22,8 @@ def get_db():
     if not hasattr(g, 'sqlite_db'):
         g.sqlite_db = connect_db()
 
+    return g.sqlite_db
+
 
 def init_db():
     '''
