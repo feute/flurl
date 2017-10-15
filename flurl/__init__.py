@@ -1,1 +1,3 @@
-from .flurl import app
+from .flurl import create_app
+
+app = create_app()
