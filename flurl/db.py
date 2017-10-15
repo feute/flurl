@@ -36,3 +36,14 @@ def init_db():
         db.cursor().executescript(f.read())
 
     db.commit()
+
+
+def save_url(original, short):
+    '''
+    Save the specified URL to the database
+    '''
+
+    db = get_db()
+    db.execute('insert into urls (short, original) values (?, ?)',
+                [short, original])
+    db.commit()

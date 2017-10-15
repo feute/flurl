@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, g
+from secrets import token_urlsafe
 
 from .db import init_db
 
@@ -47,3 +48,12 @@ def register_teardowns(app):
 
         if hasattr(g, 'sqlite_db'):
             g.sqlite_db.close()
+
+
+def generate_url(length=4):
+    '''
+    Generate a random URL string with a default length of 4.
+    '''
+
+    shortened = token_urlsafe(length)
+    return shortened
