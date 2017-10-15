@@ -16,3 +16,12 @@ taken from the `POST` data.
 Behind the scenes, the server gets the original URL from the `POST` data,
 uses the function `token_urlsafe` from the `secrets` package to generate
 a random URL string, and saves the mapping in a database.
+
+## Installation
+
+```
+$ pip install -e .
+$ export FLASK_APP=flurl
+$ flask initdb
+$ flask run
+```
