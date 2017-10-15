@@ -1,10 +1,16 @@
 import os
 
-from flask import Flask, g
+from flask import Flask, g, request
 from secrets import token_urlsafe
 
 from .db import init_db
 
+
+usage = '''flurl is a simple URL shortener.
+
+It is as simple as posting your URL to / and getting your shortened URL
+as the response.
+'''
 
 def create_app(config=None):
     '''
@@ -22,6 +28,7 @@ def create_app(config=None):
 
     register_cli(app)
     register_teardowns(app)
+    register_routes(app)
 
     return app
 
@@ -48,6 +55,16 @@ def register_teardowns(app):
 
         if hasattr(g, 'sqlite_db'):
             g.sqlite_db.close()
+
+
+def register_routes(app):
+    @app.route('/', methods=['GET', 'POST'])
+    def index():
+        if request.method == 'POST':
+            shortened_url = generate_url()
+            return request.url_root + shortened_url + '\n'
+
+        return usage
 
 
 def generate_url(length=4):
