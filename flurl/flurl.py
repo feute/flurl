@@ -3,13 +3,15 @@ import os
 from flask import Flask, g, request
 from secrets import token_urlsafe
 
-from .db import init_db
+from .db import init_db, save_url
 
 
 usage = '''flurl is a simple URL shortener.
 
 It is as simple as posting your URL to / and getting your shortened URL
 as the response.
+
+usage: curl -X POST -d <your-url> http://<server-url>/
 '''
 
 def create_app(config=None):
@@ -22,6 +24,7 @@ def create_app(config=None):
 
     app.config.update(dict(
         DATABASE=os.path.join(app.root_path, 'flurl.db'),
+        MAX_URL_LENGTH=100,
     ))
     app.config.update(config or {})
     app.config.from_envvar('FLURL_SETTINGS', silent=True)
@@ -61,7 +64,18 @@ def register_routes(app):
     @app.route('/', methods=['GET', 'POST'])
     def index():
         if request.method == 'POST':
+            if not request.content_length:
+                return 'No URL was provided.\n'
+            if request.content_length > app.config['MAX_URL_LENGTH']:
+                return 'Content is too long.\n'
+
+            original_url = request.get_data(cache=False, as_text=True)
+            # TODO: use a better method to validate the incoming URL.
+            if not original_url.startswith('http'):
+                return 'Invalid URL.\n'
+
             shortened_url = generate_url()
+            save_url(original_url, shortened_url)
             return request.url_root + shortened_url + '\n'
 
         return usage
