@@ -1,4 +1,5 @@
 import os
+import validators
 
 from flask import Flask, g, request, redirect
 from secrets import token_urlsafe
@@ -70,8 +71,7 @@ def register_routes(app):
                 return 'Content is too long.\n'
 
             original_url = request.get_data(cache=False, as_text=True)
-            # TODO: use a better method to validate the incoming URL.
-            if not original_url.startswith('http'):
+            if not validators.url(original_url):
                 return 'Invalid URL.\n'
 
             shortened_url = generate_url()
