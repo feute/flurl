@@ -47,3 +47,16 @@ def save_url(original, short):
     db.execute('insert into urls (short, original) values (?, ?)',
                 [short, original])
     db.commit()
+
+
+def fetch_url(short):
+    '''
+    Fetch the shortened URL from the database and return the original
+    URL.
+    '''
+
+    db = get_db()
+    cur = db.execute('select original from urls where short=? limit 1',
+                      [short])
+    original = cur.fetchone()
+    return original[0] if original else None

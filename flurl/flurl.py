@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, g, request
+from flask import Flask, g, request, redirect
 from secrets import token_urlsafe
 
-from .db import init_db, save_url
+from .db import init_db, save_url, fetch_url
 
 
 usage = '''flurl is a simple URL shortener.
@@ -79,6 +79,15 @@ def register_routes(app):
             return request.url_root + shortened_url + '\n'
 
         return usage
+
+
+    @app.route('/<short_url>')
+    def redirect_url(short_url):
+        original_url = fetch_url(short_url)
+        if not original_url:
+            return 'The URL doesn\'t exist.\n'
+
+        return redirect(original_url)
 
 
 def generate_url(length=4):
