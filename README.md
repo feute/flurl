@@ -1,5 +1,5 @@
 # flurl
-flurl is a very simple URL shortener.
+`flurl` is a very simple URL shortener.
 
 It is meant to use with programs like `curl`.
 
@@ -21,7 +21,9 @@ a random URL string, and saves the mapping in a database.
 
 - `validators` package, install it with:
 
-`$ pip install validators`
+```
+$ pip install validators
+```
 
 ## Installation
 
